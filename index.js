@@ -59,11 +59,26 @@ async function run() {
             res.send(result)
         })
 
+
+
         // bid related api
         // post all bids data
         app.post('/bids', async (req, res) => {
             const newBid = req.body;
             const result = await bidsCollection.insertOne(newBid);
+            res.send(result)
+        })
+        // bids status update
+        app.patch('/bids/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const updateBids = req.body;
+            const updateInfo = {
+                $set: {
+                    status: updateBids.status
+                },
+            };
+            const result = await bidsCollection.updateOne(filter, updateInfo);
             res.send(result)
         })
 
