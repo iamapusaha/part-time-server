@@ -26,33 +26,46 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         // await client.connect();
         // Send a ping to confirm a successful connection
-        const jobsCollection = client.db('jobsDB').collection('jobs')
 
-        // job related api 
+        const jobsCollection = client.db('jobsDB').collection('jobs');
+        const bidsCollection = client.db('bidsDB').collection('bids');
+
+        // job related api
+        //posted all jobs data 
         app.post('/jobs', async (req, res) => {
             const newJob = req.body;
             const result = await jobsCollection.insertOne(newJob);
             res.send(result)
         })
+        //get data by all data by eamil query
         app.get('/jobs', async (req, res) => {
             const email = req.query.email;
             const query = { email: email };
             const result = await jobsCollection.find(query).toArray();
             res.send(result)
         })
+        // get all data by category
         app.get('/jobs/:category', async (req, res) => {
             const category = req.params.category;
             const query = { category: category }
             const result = await jobsCollection.find(query).toArray();
             res.send(result)
         })
+        // get one data by id
         app.get('/jobs/v1/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
-            const result = await jobsCollection.findone(query)
+            const result = await jobsCollection.findOne(query)
             res.send(result)
         })
 
+        // bid related api
+        // post all bids data
+        app.post('/bids', async (req, res) => {
+            const newBid = req.body;
+            const result = await bidsCollection.insertOne(newBid);
+            res.send(result)
+        })
 
 
 
