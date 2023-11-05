@@ -58,8 +58,28 @@ async function run() {
             const result = await jobsCollection.findOne(query)
             res.send(result)
         })
+        // update job data info
+        app.patch('/jobs/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const updateJobs = req.body;
+            const updateJobsData = {
+                $set: {
+                    title: updateJobs.title,
+                    email: updateJobs.email,
+                    date: updateJobs.date,
+                    category: updateJobs.category,
+                    minPrice: updateJobs.minPrice,
+                    maxPrice: updateJobs.maxPrice,
+                    discription: updateJobs.discription
+                },
+            };
+            const result = await jobsCollection.updateOne(filter, updateJobsData)
+            res.send(result)
+        })
+        // delete job data info my id
         app.delete('/jobs/:id', async (req, res) => {
-            const id = rew.params.id;
+            const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await jobsCollection.deleteOne(query)
             res.send(result)
