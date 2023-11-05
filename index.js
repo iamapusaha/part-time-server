@@ -67,6 +67,21 @@ async function run() {
             res.send(result)
         })
 
+        //get all my bids data by eamil query
+        app.get('/bidder', async (req, res) => {
+            const email = req.query.email;
+            const query = { bidderEmail: email };
+            const result = await bidsCollection.find(query).toArray();
+            res.send(result)
+        })
+        //get all my bids request data by buyer eamil query
+        app.get('/buyer', async (req, res) => {
+            const email = req.query.email;
+            const query = { buyerEmail: email };
+            const result = await bidsCollection.find(query).toArray();
+            res.send(result)
+        })
+
 
 
         await client.db("admin").command({ ping: 1 });
