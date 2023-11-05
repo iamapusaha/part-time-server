@@ -33,6 +33,12 @@ async function run() {
             const result = await jobsCollection.insertOne(newJob);
             res.send(result)
         })
+        app.get('/jobs/:category', async (req, res) => {
+            const category = req.params.category;
+            const query = { category: category }
+            const result = await jobsCollection.find(query).toArray();
+            res.send(result)
+        })
 
 
         await client.db("admin").command({ ping: 1 });
