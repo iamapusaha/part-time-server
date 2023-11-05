@@ -34,6 +34,12 @@ async function run() {
             const result = await jobsCollection.insertOne(newJob);
             res.send(result)
         })
+        app.get('/jobs', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const result = await jobsCollection.find(query).toArray();
+            res.send(result)
+        })
         app.get('/jobs/:category', async (req, res) => {
             const category = req.params.category;
             const query = { category: category }
@@ -43,9 +49,11 @@ async function run() {
         app.get('/jobs/v1/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
-            const result = await jobsCollection.findOne(query)
+            const result = await jobsCollection.findone(query)
             res.send(result)
         })
+
+
 
 
         await client.db("admin").command({ ping: 1 });
