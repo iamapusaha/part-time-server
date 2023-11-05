@@ -58,7 +58,12 @@ async function run() {
             const result = await jobsCollection.findOne(query)
             res.send(result)
         })
-
+        app.delete('/jobs/:id', async (req, res) => {
+            const id = rew.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await jobsCollection.deleteOne(query)
+            res.send(result)
+        })
 
 
         // bid related api
