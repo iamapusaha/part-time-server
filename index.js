@@ -2,12 +2,16 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 require('dotenv').config()
+const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 
 //middleware
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+    origin: ['http://localhost:5173'],
+    credentials: true
+}))
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.3k7cyas.mongodb.net/?retryWrites=true&w=majority`;
@@ -29,7 +33,22 @@ async function run() {
 
         const jobsCollection = client.db('jobsDB').collection('jobs');
         const bidsCollection = client.db('bidsDB').collection('bids');
+        //auth related api
+        app.post('/jwt', async (req, res) => {
+            const user = req.body.email;
+            const token = jwt.sign({ user }, 'secret', { expiresIn: '1h' })
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'none'
+            })
+                .send({ success: true })
+            console.log(token);
+        })
+        app.post('/logout', async (req, res) => {
+            const user = req.body;
 
+        })
         // job related api
         //posted all jobs data 
         app.post('/jobs', async (req, res) => {
