@@ -3,6 +3,7 @@ const cors = require('cors');
 const app = express();
 require('dotenv').config()
 const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 
@@ -12,6 +13,22 @@ app.use(cors({
     origin: ['http://localhost:5173'],
     credentials: true
 }))
+app.use(cookieParser())
+
+const verifyToken = (req, res, next) => {
+    const token = req.cookies.token;
+    if (!token) {
+        return res.status(401).send({ message: "unauthorized  access" })
+    }
+    jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
+        if (err) {
+            return res.status(401).send({ message: "unauthorized  access" })
+        }
+        req.user = decoded;
+        next()
+    })
+
+}
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.3k7cyas.mongodb.net/?retryWrites=true&w=majority`;
@@ -36,7 +53,7 @@ async function run() {
         //auth related api
         app.post('/jwt', async (req, res) => {
             const user = req.body.email;
-            const token = jwt.sign({ user }, 'secret', { expiresIn: '1h' })
+            const token = jwt.sign({ user }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' })
             res.cookie('token', token, {
                 httpOnly: true,
                 secure: true,
@@ -64,7 +81,7 @@ async function run() {
             res.send(result)
         })
         // get all data by category
-        app.get('/jobs/:category', async (req, res) => {
+        app.get('/jobs/:category', verifyToken, async (req, res) => {
             const category = req.params.category;
             const query = { category: category }
             const result = await jobsCollection.find(query).toArray();
