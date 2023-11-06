@@ -60,7 +60,6 @@ async function run() {
                 sameSite: 'none'
             })
                 .send({ success: true })
-            console.log(token);
         })
         app.post('/logout', async (req, res) => {
             res.clearCookie('token', { maxAge: 0 })
@@ -103,6 +102,7 @@ async function run() {
                 $set: {
                     title: updateJobs.title,
                     email: updateJobs.email,
+                    photo: updateJobs.photo,
                     date: updateJobs.date,
                     category: updateJobs.category,
                     minPrice: updateJobs.minPrice,
