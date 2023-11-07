@@ -73,9 +73,15 @@ async function run() {
             res.send(result)
         })
         //get all data by eamil query
-        app.get('/jobs', async (req, res) => {
-            const email = req.query.email;
-            const query = { email: email };
+        app.get('/jobs', verifyToken, async (req, res) => {
+            if (req.query.email !== req.user.user) {
+                return res.status(403).send({ message: 'forbidden access' })
+            }
+            let query = {};
+            if (req.query?.email) {
+                const email = req.query.email;
+                query = { email: email }
+            }
             const result = await jobsCollection.find(query).toArray();
             res.send(result)
         })
