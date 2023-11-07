@@ -99,13 +99,6 @@ async function run() {
             const result = await jobsCollection.findOne(query)
             res.send(result)
         })
-        // to get update single data by id
-        app.get('/update/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: new ObjectId(id) }
-            const result = await jobsCollection.findOne(query)
-            res.send(result)
-        })
         // update job data info
         app.patch('/jobs/:id', async (req, res) => {
             const id = req.params.id;
