@@ -72,7 +72,7 @@ async function run() {
             const result = await jobsCollection.insertOne(newJob);
             res.send(result)
         })
-        //get data by all data by eamil query
+        //get all data by eamil query
         app.get('/jobs', async (req, res) => {
             const email = req.query.email;
             const query = { email: email };
@@ -80,7 +80,7 @@ async function run() {
             res.send(result)
         })
         // get all data by category
-        app.get('/jobs/:category', verifyToken, async (req, res) => {
+        app.get('/jobs/:category', async (req, res) => {
             const category = req.params.category;
             const query = { category: category }
             const result = await jobsCollection.find(query).toArray();
@@ -145,15 +145,27 @@ async function run() {
 
         //get all my bids data by eamil query
         app.get('/bidder', async (req, res) => {
-            const email = req.query.email;
-            const query = { bidderEmail: email };
+            if (req.query.email !== req.user.user) {
+                return res.status(403).send({ message: 'forbidden access' })
+            }
+            let query = {};
+            if (req.query?.email) {
+                const email = req.query.email;
+                query = { bidderEmail: email }
+            }
             const result = await bidsCollection.find(query).toArray();
             res.send(result)
         })
         //get all my bids request data by buyer eamil query
-        app.get('/buyer', async (req, res) => {
-            const email = req.query.email;
-            const query = { buyerEmail: email };
+        app.get('/buyer', verifyToken, async (req, res) => {
+            if (req.query.email !== req.user.user) {
+                return res.status(403).send({ message: 'forbidden access' })
+            }
+            let query = {};
+            if (req.query?.email) {
+                const email = req.query.email;
+                query = { buyerEmail: email }
+            }
             const result = await bidsCollection.find(query).toArray();
             res.send(result)
         })
