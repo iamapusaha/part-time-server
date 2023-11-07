@@ -144,7 +144,7 @@ async function run() {
         })
 
         //get all my bids data by eamil query
-        app.get('/bidder', async (req, res) => {
+        app.get('/bidder', verifyToken, async (req, res) => {
             if (req.query.email !== req.user.user) {
                 return res.status(403).send({ message: 'forbidden access' })
             }
