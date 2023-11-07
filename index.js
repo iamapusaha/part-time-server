@@ -67,7 +67,7 @@ async function run() {
         })
         // job related api
         //posted all jobs data 
-        app.post('/jobs', async (req, res) => {
+        app.post('/jobs', verifyToken, async (req, res) => {
             const newJob = req.body;
             const result = await jobsCollection.insertOne(newJob);
             res.send(result)
@@ -93,7 +93,7 @@ async function run() {
             res.send(result)
         })
         // get one data by id
-        app.get('/jobs/v1/:id', async (req, res) => {
+        app.get('/jobs/v1/:id', verifyToken, async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await jobsCollection.findOne(query)
