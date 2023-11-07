@@ -172,7 +172,7 @@ async function run() {
                 const email = req.query.email;
                 query = { buyerEmail: email }
             }
-            const result = await bidsCollection.find(query).toArray();
+            const result = await bidsCollection.find(query).sort({ "status": 1 }).toArray();
             res.send(result)
         })
 
