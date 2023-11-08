@@ -62,9 +62,13 @@ async function run() {
                 .send({ success: true })
         })
         app.post('/logout', async (req, res) => {
-            res.clearCookie('token', { maxAge: 0 })
+            const user = req.body;
+            console.log('logging out', user);
+            res
+                .clearCookie('token', { maxAge: 0, sameSite: 'none', secure: true })
                 .send({ success: true })
         })
+
         // job related api
         //posted all jobs data 
         app.post('/jobs', verifyToken, async (req, res) => {
