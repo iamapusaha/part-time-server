@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 //middleware
 app.use(express.json())
 app.use(cors({
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173', 'https://part-time-8e650.web.app', 'https://part-time-8e650.firebaseapp.com'],
     credentials: true
 }))
 app.use(cookieParser())
