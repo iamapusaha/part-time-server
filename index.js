@@ -44,9 +44,6 @@ const client = new MongoClient(uri, {
 
 async function run() {
     try {
-        // Connect the client to the server	(optional starting in v4.7)
-        // await client.connect();
-        // Send a ping to confirm a successful connection
 
         const jobsCollection = client.db('jobsDB').collection('jobs');
         const bidsCollection = client.db('bidsDB').collection('bids');
@@ -63,7 +60,7 @@ async function run() {
         })
         app.post('/logout', async (req, res) => {
             const user = req.body;
-            console.log('logging out', user);
+            console.log(user);
             res
                 .clearCookie('token', { maxAge: 0, sameSite: 'none', secure: true })
                 .send({ success: true })
